@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PixelDrawing</title>
+    <link rel="stylesheet" href="snake-styles.css">
+</head>
+<style>
+    body{
+        margin: 0;
+    }
+    .to_center{
+        display: flex;
+        margin-top: 40px;
+        max-width: 100%;
+        overflow: hidden;
+    }
+
+
+
+
+</style>
+<body>
+    <div class="to_center">
+
+        <div id="game-window">
+            <!-- Scena gry -->
+            <canvas id="game-scene">
+                <p>Przykro mi. Twoja przeglądarka nie obsługuje niezbędnych komponentów do uruchumienia gry lub blokuje pliki JavaScript</p>
+            </canvas>
+
+            <!-- Pierwsze menu -->
+            <div class="game-menu">
+            </div>
+            <!-- Menu Wyboru Sterowania -->
+            <!-- Menu wyboru Trybu Scian -->
+
+
+            <!-- GAMEPAD for mobile -->
+            <div id="game-pad">
+                <button type="button" class="game-pad-button" value="w">&#x2191;</button>
+                <div>
+                    <button type="button" class="game-pad-button" value="a">&#x2190;</button>
+                    <button type="button" class="game-pad-button" value="d">&#x2192;</button>
+                </div>
+                <button type="button" class="game-pad-button" value="s">&#x2193;</button>
+            </div>
+
+        </div>
+
+
+
+
+
+
+    </div>
+    <script src="snake-game.js"></script>
+    
+</body>
+</html>
