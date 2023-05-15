@@ -1,3 +1,22 @@
+#game-container{
+    position: fixed;
+    outline: 2px solid red;
+    width: 98%;
+    height: 98%;
+    left: 1%;
+    top: 1%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#game-window{
+    position: relative;
+    background-color: aqua;
+    z-index: 1;
+}
+
 #game-scene{
     display: block;
     border: 5px solid rgb(72, 149, 1);
@@ -6,16 +25,27 @@
     background-repeat: no-repeat;
     background-repeat: repeat;
     margin: 0 auto;
-}
-
-#game-window{
     position: relative;
-    background-color: rgb(0, 0, 0);
-    width: 100%;
-    height: 600px;
-    max-height: 90vh;
+    z-index: 0;
 }
 
+
+
+#score-display::before{
+    content: "score: ";
+    
+}
+
+#score-display{
+    top: 3px;
+    left: 5px;
+    position: absolute;
+    font-size: 1rem;
+    font-family: monospace;
+    color: rgb(255, 255, 255);
+    z-index: 2;
+    opacity: .7;
+}
 
 .game-menu{
     width: 100%;
@@ -30,55 +60,25 @@
     align-items: center;
 }
 
-#game-pad{
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background-color: rgba(245, 245, 220, 0.3);
+
+#joystick{
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+    background-color: rgb(0, 0, 0);
+    opacity: .7;
     position: absolute;
-    bottom: 2px;
-    left: 2px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
+    z-index: 5;
+    border-radius: 50%;
     visibility: hidden;
 }
 
-#game-pad button{
-    box-sizing: border-box;
+#joystick div{
+    position: absolute;
+    width: 40px;
     height: 40px;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    display: block;
-    border-radius: 0;
-    border: none;
-    outline: none;    
-    background-color: transparent;
-    font-size: 2rem;
-    color:rgba(230, 230, 230, 0.4)
+    background-color: rgb(255, 255, 255);
+    border-radius: 50%;
+    transition: all .5s linear;
 }
 
-#game-pad button:focus{
-    color: rgba(0, 0, 0, 0.4);
-}
-
-#game-pad div{
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-#game-pad div button{
-    width: 50%;
-    border: 1px solid rgba(118, 118, 118, 0.4);
-}
-
-@media (hover: none){
-    #game-pad{
-        visibility: visible;
-    }
-}
