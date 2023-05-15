@@ -24,7 +24,7 @@ let gamePaused = false;
 
 // FIT to device functions ( mobile mode / adjust to size)
 function countMapSurface(){
-    let window = document.getElementById("game-window");
+    let window = document.getElementById("game-container");
     let window_width = window.offsetWidth;
     let window_height = window.offsetHeight;
     let max_width = Math.floor(window_width/16) - 1;
