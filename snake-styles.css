@@ -1,3 +1,8 @@
+body{
+    margin:0;
+    overscroll-behavior-y: contain;
+}
+
 #game-container{
     position: fixed;
     outline: 2px solid red;
@@ -8,8 +13,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overscroll-behavior-y: contain;
-
 }
 
 #game-window{
