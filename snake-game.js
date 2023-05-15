@@ -14,21 +14,13 @@ const snakeColors = {
 
 }
 const canvas = document.getElementById("game-scene");
+const scoreDisplay = document.getElementById("score-display");
 let ctx = canvas.getContext("2d");
 let map = countMapSurface();
 let playerRespawnPoint = map.map[`2:2`];
 let player = new Snake(playerRespawnPoint,snakeColors.blue);
 let pointsmenager = new PointsMenager();
 let gamePaused = false;
-
-
-function gamePadController(){
-    player.steering({key:this.value});
-}
-for(let button of document.getElementsByClassName("game-pad-button")){
-    button.addEventListener("click",gamePadController)
-}
-
 
 // FIT to device functions ( mobile mode / adjust to size)
 function countMapSurface(){
@@ -145,14 +137,14 @@ function Snake(respawn_point,colors){
         let cell = map.get_cell(this.normX,this.normY);
 
         if(cell){
-            if(cell != this.actual_cell){ //ENTRY TO NEW
+            if(cell != this.actual_cell){ // Enter to next map cell
                 if(this.snakeBody.includes(cell)) this.alive = false;
                 this.snakeBody.unshift(this.actual_cell);
                 this.actual_cell = cell;
                 this.smallowed++
             }
 
-            if(this.normX == cell.center.x && this.normY == cell.center.y){ //CENTER
+            if(this.normX == cell.center.x && this.normY == cell.center.y){ // when in center of cell
                 if(cell != this.last_cell){
                     this.locked = false;
                     this.last_cell = cell;
@@ -232,9 +224,7 @@ function Snake(respawn_point,colors){
         this.renderHead();
     };
 
-    // Cosmetic's Grapics functions from snake below 
-
-    this.renderNeck = function(){
+    this.renderNeck = function(){ // the neck is only used for the effect of smooth movement
         this.snakeNeck.unshift({
             x:this.x,
             y:this.y,
@@ -293,12 +283,17 @@ function Snake(respawn_point,colors){
 }
 
 
-// Punkty do zjadania
+// Points to eat 
 function PointsMenager(){
     this.normal = false;
     this.special = false;
     this.specialColdown;
+    this.points = 0;
 
+    this.updateDisplay = function(){
+        scoreDisplay.innerHTML = this.points;
+    }
+    
     this.collect = function(cell){
         this.specialColdown --; // collect functions is called once on a cell so it's perfect place to countdown
         let data;
@@ -312,7 +307,11 @@ function PointsMenager(){
             this.special = false;
             
         }
-        if(data) player.smallow(data);
+        if(data){
+            player.smallow(data);
+            this.points += data.pointValue;
+            this.updateDisplay();
+        } 
     }
 
     this.randomInt = function(max){
@@ -333,7 +332,7 @@ function PointsMenager(){
         return cell
     }
 
-    this.createPoint = function(img="point_normal.png",speed=.002,length=1){
+    this.createPoint = function(img="point_normal.png",speed=.002,length=1,pointValue=5){
         let cell = this.randomCell();
         let image = new Image(16,16);
         image.src = img;  //"point_normal.png";
@@ -342,11 +341,12 @@ function PointsMenager(){
             img:image,
             speedBonus:speed,
             lengthBonus:length,
+            pointValue:pointValue,
         }
     }
 
     this.createTimePoint = function(){
-        this.special = this.createPoint("point_special.png",.004,2);
+        this.special = this.createPoint("point_special.png",.004,2,15);
         this.specialColdown = 20; // counting like that becouse snake can speed up and reach spec points faster :)
     }
 
@@ -374,3 +374,104 @@ function gameLoop(){
 }
 
 gameLoop();
+
+
+// JOYSTICK for mobile devices
+function JoyStick(window,callback){
+    this.gameWindow = window;
+    this.callback = callback;
+    this.popup = document.getElementById("joystick");
+    this.popupSize = this.popup.clientWidth;
+    this.pivot = this.popup.querySelector("div");
+    this.pivot.style.left = "30px";
+    this.pivot.style.top = "30px";
+
+    this.returnToutchPos = function(event){
+        var rect = event.target.getBoundingClientRect();
+        var x = event.targetTouches[0].pageX - rect.left;
+        var y = event.targetTouches[0].pageY - rect.top;
+        return {
+            x:x,
+            y:y
+        }
+    }
+
+    this.firstToutch = function(event){
+        let toutchPos = this.returnToutchPos(event);
+        let newX = toutchPos.x - this.popupSize/2;
+        let newY = toutchPos.y - this.popupSize/2;
+        this.popup.style.visibility = "visible";
+
+        let distance_right = this.gameWindow.clientWidth - (newX + this.popupSize);
+        let distance_left = 0 - newX;
+        let distance_bottom = this.gameWindow.clientHeight - (newY + this.popupSize);
+        let distance_top = 0 - newY;
+
+        if(distance_left > 0){ newX += distance_left; } // overflow left
+        else if (distance_right < 0){ newX += distance_right; } // oberflow right
+
+        if(distance_top > 0){ newY += distance_top; } // overflow top
+        else if (distance_bottom < 0){ newY += distance_bottom; } // oberflow right
+        
+        this.popup.style.left = `${newX}px`;
+        this.popup.style.top = `${newY}px`;
+    }
+
+
+    this.toutch = function(event){
+        let toutchPos = this.returnToutchPos(event);
+        let offSetX = toutchPos.x - this.popup.offsetLeft;
+        let offSetY = toutchPos.y - this.popup.offsetTop;
+        let distance_horizontal = offSetX - this.popupSize/2;
+        let distance_vertical = offSetY - this.popupSize/2;
+        let absoluteHorizontal = Math.abs(distance_horizontal);
+        let absoluteVertical = Math.abs(distance_vertical);
+
+            if(absoluteHorizontal > 30 && absoluteHorizontal > absoluteVertical){
+                if(distance_horizontal > 0){
+                    this.callback({key:"ArrowRight"});
+                    this.pivot.style.left = "60px";
+                    this.pivot.style.top = "30px";
+                } 
+                else{
+                    this.callback({key:"ArrowLeft"});
+                    this.pivot.style.left = "0px";
+                    this.pivot.style.top = "30px";
+                }
+            
+            } 
+            else if (absoluteVertical > 30 && absoluteHorizontal < absoluteVertical){
+
+                if(distance_vertical > 0){
+                    this.callback({key:"ArrowDown"});
+                    this.pivot.style.left = "30px";
+                    this.pivot.style.top = "60px";
+                } else{
+                    this.callback({key:"ArrowUp"});
+                    this.pivot.style.left = "30px";
+                    this.pivot.style.top = "0px";
+                    
+                }
+                
+            }
+            else{
+                this.pivot.style.left = "30px";
+                this.pivot.style.top = "30px";
+            }
+    }
+
+    this.endTotuch = function(){
+        this.popup.style.visibility = "hidden";
+    }
+
+    this.movePivot = function(x,y){
+
+    }
+
+
+    this.gameWindow.addEventListener("touchstart",this.firstToutch.bind(this))
+    this.gameWindow.addEventListener("touchmove",this.toutch.bind(this))
+    this.gameWindow.addEventListener("touchend",this.endTotuch.bind(this))
+}
+
+new JoyStick(document.getElementById("game-window"),player.steering);
