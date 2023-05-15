@@ -1,6 +1,5 @@
 body{
     margin:0;
-    overscroll-behavior-y: contain;
 }
 
 #game-container{
@@ -83,6 +82,5 @@ body{
     height: 40px;
     background-color: rgb(255, 255, 255);
     border-radius: 50%;
-    transition: all .5s linear;
 }
 
