@@ -1,5 +1,6 @@
 const canvas = document.getElementById("game-scene");
 const scoreDisplay = document.getElementById("score-display");
+let joystick = new JoyStick(document.getElementById("game-window"));
 let ctx = canvas.getContext("2d");
 let map = countMapSurface();
 let playerRespawnPoint = map.map[`2:2`];
@@ -451,9 +452,8 @@ function countMapSurface(){
 }
 
 // JOYSTICK for mobile devices
-function JoyStick(window,callback){
+function JoyStick(window){
     this.gameWindow = window;
-    this.callback = callback;
     this.popup = document.getElementById("joystick");
     this.popupSize = this.popup.clientWidth;
     this.pivot = this.popup.querySelector("div");
