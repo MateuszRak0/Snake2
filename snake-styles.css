@@ -5,7 +5,6 @@ body{
 
 #game-container{
     position: fixed;
-    outline: 2px solid red;
     width: 98%;
     height: 98%;
     left: 1%;
@@ -13,17 +12,16 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #000;
 }
 
 #game-window{
     position: relative;
-    background-color: aqua;
     z-index: 1;
 }
 
 #game-scene{
     display: block;
-    border: 5px solid rgb(72, 149, 1);
     background-image: url(grass_background.webp);
     background-position: center;
     background-repeat: no-repeat;
@@ -33,7 +31,13 @@ body{
     z-index: 0;
 }
 
-
+#game-top-bar{
+    width: 100%;
+    height: fit-content;
+    z-index: 2;
+    flex-direction: row;
+    justify-content: space-between;
+}
 
 #score-display::before{
     content: "score: ";
@@ -41,13 +45,9 @@ body{
 }
 
 #score-display{
-    top: 3px;
-    left: 5px;
-    position: absolute;
     font-size: 1rem;
     font-family: monospace;
     color: rgb(255, 255, 255);
-    z-index: 2;
     opacity: .7;
 }
 
@@ -64,7 +64,34 @@ body{
     align-items: center;
 }
 
+.window-element-active{
+    visibility: visible !important;
+}
 
+.menu-page-header{
+    font-size: 2rem;
+    font-weight: 700;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.game-menu-button{
+    display: block;
+    padding: 6px 12px;
+    font-size: 1.2rem;
+    font-weight: 500;
+}
+
+.game-menu-row{
+    width: 95%;
+    margin: auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+
+}
+#game-button-pause{
+    background-color: transparent;
+}
 #joystick{
     width: 100px;
     height: 100px;
