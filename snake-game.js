@@ -158,7 +158,7 @@ Snake.prototype.dead = function(){
     document.getElementById("dead-score-display").innerHTML = `Twój wynik: ${pointsmenager.points}`;
 }
 
-function Snake(respawn_point,colors){
+function Snake(respawn_point){
     this.x = respawn_point.center.x;
     this.y = respawn_point.center.y;
     this.alive = true;
@@ -166,8 +166,6 @@ function Snake(respawn_point,colors){
     this.speed = .3;
     this.snakeNeck = [];
     this.snakeBody = [];
-    this.firstColor = colors.firstColor;
-    this.secondColor = colors.secondColor;
 
     this.last_cell = map.get_cell(this.x,this.y);
     this.actual_cell = map.get_cell(this.x,this.y);
