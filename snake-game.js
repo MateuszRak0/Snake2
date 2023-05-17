@@ -549,5 +549,3 @@ function JoyStick(window,callback){
     this.gameWindow.addEventListener("touchmove",this.toutch.bind(this))
     this.gameWindow.addEventListener("touchend",this.endTotuch.bind(this))
 }
-
-new JoyStick(document.getElementById("game-window"),player.steering);
