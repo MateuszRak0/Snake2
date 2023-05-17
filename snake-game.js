@@ -1,3 +1,12 @@
+const canvas = document.getElementById("game-scene");
+const scoreDisplay = document.getElementById("score-display");
+let ctx = canvas.getContext("2d");
+let map = countMapSurface();
+let playerRespawnPoint = map.map[`2:2`];
+let player;
+let pointsmenager;
+let gamePaused = true;
+let menuWindows = {};
 const snakeColors = {
     blue:{
         firstColor:"#0051ff",
@@ -13,40 +22,84 @@ const snakeColors = {
     }
 
 }
-const canvas = document.getElementById("game-scene");
-const scoreDisplay = document.getElementById("score-display");
-let ctx = canvas.getContext("2d");
-let map = countMapSurface();
-let playerRespawnPoint = map.map[`2:2`];
-let player = new Snake(playerRespawnPoint,snakeColors.blue);
-let pointsmenager = new PointsMenager();
-let gamePaused = false;
+window.onload = loadGameComponents;
 
-// FIT to device functions ( mobile mode / adjust to size)
-function countMapSurface(){
-    let window = document.getElementById("game-container");
-    let window_width = window.offsetWidth;
-    let window_height = window.offsetHeight;
-    let max_width = Math.floor(window_width/16) - 1;
-    let max_height = Math.floor(window_height/16) - 1;
-    if(max_width >= 40 && max_height >= 20){
-        return new Map(40,20,16); // max horizontal oriented size
-    } else if(max_width >= 20 && max_height >= 40) {
-        return new Map(20,40,16); // Max vertical oriented size
-    } else {
-        let surface = max_width * max_height;
-
-        while(surface > 820){
-            max_width --;
-            max_height --;
-            surface = max_width * max_height
-        }
-        
-        return new Map(max_width,max_height,16);
-        
+function loadGameComponents(){
+    for(let menuWindow of document.getElementsByClassName("game-menu")){ // Saved all menu windows to call them later by button value.
+        let name = menuWindow.getAttribute("name");
+        menuWindows[name] = menuWindow;
     }
+    
+    for(let button of document.getElementsByName("switch-menu-page")){ // load all buttons from menu
+        button.addEventListener("click",switchMenuWindow);
+    }
+
+    for(let button of document.getElementsByName("choice-game-mode")){ // load choice game mode buttons
+        button.addEventListener("click",setGameMode);
+    }
+
+    for(let button of document.getElementsByName("choice-snake-color")){ // load choice snake color buttons
+        button.addEventListener("click",setSnakeColor)
+    }
+
+    document.getElementById("game-button-pause").addEventListener("click",pauseGame);
+    document.getElementById("game-button-resume").addEventListener("click",resumeGame);
+
 }
 
+function switchMenuWindow(){ // Switch menu window by button value 
+    menuWindows[this.value].classList.add("window-element-active");
+    this.offsetParent.classList.remove("window-element-active");
+
+}
+
+function setGameMode(){
+    if(this.value == "nowalls"){
+        Snake.prototype.checkBorders  = function(){
+                if(this.x < 0){ this.x = map.borders.right; } 
+                else if(this.x > map.borders.right){this.x = 0;}
+                else if(this.y < 0){ this.y = map.borders.bottom}
+                else if(this.y > map.borders.bottom){ this.y = 0}
+            }
+    }
+    else{
+        Snake.prototype.checkBorders  = function(){
+            if(this.x < 0 || this.x > map.borders.right){ this.dead()} 
+            else if(this.y < 0 || this.y > map.borders.bottom){ this.dead()}
+        }
+    }
+    this.offsetParent.classList.remove("window-element-active");
+    menuWindows["snakecolor-menu"].classList.add("window-element-active");
+}
+
+
+function setSnakeColor(){
+    Snake.prototype.colors = snakeColors[this.value];
+    this.offsetParent.classList.remove("window-element-active");
+    startGame(); // Starting game after select snake color 
+}
+
+function startGame(){
+    player = new Snake(playerRespawnPoint);
+    pointsmenager = new PointsMenager();
+    joystick.callback = player.steering.bind(player);
+    gamePaused = false;
+    menuWindows["game-topbar"].classList.add("window-element-active");
+    gameLoop();
+}
+
+function pauseGame(){
+    gamePaused = true;
+    menuWindows["pause-menu"].classList.add("window-element-active");
+    menuWindows["game-topbar"].classList.remove("window-element-active");
+}
+
+function resumeGame(){
+    gamePaused = false;
+    menuWindows["pause-menu"].classList.remove("window-element-active");
+    menuWindows["game-topbar"].classList.add("window-element-active");
+    gameLoop();
+}
 
 // TYPICAL GAME FUNCTIONS BELOW !
 
@@ -97,6 +150,14 @@ function Map(width,height,cell_size){
 }
 
 // GRACZ
+Snake.prototype.dead = function(){
+    this.alive = false;
+    gamePaused = true;
+    menuWindows["gameover-menu"].classList.add("window-element-active");
+    menuWindows["game-topbar"].classList.remove("window-element-active");
+    document.getElementById("dead-score-display").innerHTML = `Twój wynik: ${pointsmenager.points}`;
+}
+
 function Snake(respawn_point,colors){
     this.x = respawn_point.center.x;
     this.y = respawn_point.center.y;
@@ -138,7 +199,7 @@ function Snake(respawn_point,colors){
 
         if(cell){
             if(cell != this.actual_cell){ // Enter to next map cell
-                if(this.snakeBody.includes(cell)) this.alive = false;
+                if(this.snakeBody.includes(cell)) this.dead();
                 this.snakeBody.unshift(this.actual_cell);
                 this.actual_cell = cell;
                 this.smallowed++
@@ -162,13 +223,6 @@ function Snake(respawn_point,colors){
         }
 
     };
-
-    this.checkBorders = function(){
-        if(this.x < 0){ this.x = map.borders.right; } 
-        else if(this.x > map.borders.right){this.x = 0;}
-        else if(this.y < 0){ this.y = map.borders.bottom}
-        else if(this.y > map.borders.bottom){ this.y = 0}
-    }
 
     this.steering = function(keyboard){
         switch(keyboard.key){
@@ -373,8 +427,30 @@ function gameLoop(){
     if(!gamePaused) setTimeout(gameLoop);
 }
 
-gameLoop();
+// FIT to device function
+function countMapSurface(){
+    let window = document.getElementById("game-container");
+    let window_width = window.offsetWidth;
+    let window_height = window.offsetHeight;
+    let max_width = Math.floor(window_width/16) - 1;
+    let max_height = Math.floor(window_height/16) - 1;
+    if(max_width >= 40 && max_height >= 20){
+        return new Map(40,20,16); // max horizontal oriented size
+    } else if(max_width >= 20 && max_height >= 40) {
+        return new Map(20,40,16); // Max vertical oriented size
+    } else {
+        let surface = max_width * max_height;
 
+        while(surface > 820){
+            max_width --;
+            max_height --;
+            surface = max_width * max_height
+        }
+        
+        return new Map(max_width,max_height,16);
+        
+    }
+}
 
 // JOYSTICK for mobile devices
 function JoyStick(window,callback){
