@@ -312,8 +312,8 @@ function Snake(respawn_point){
 
     this.draw = function(){
         for(let i = 0; i < this.snakeBody.length; i++){
-            ctx.fillStyle = this.firstColor;
-            if(i % 2 == 0)ctx.fillStyle = this.secondColor; 
+            ctx.fillStyle = this.colors.firstColor;
+            if(i % 2 == 0)ctx.fillStyle = this.colors.secondColor; 
             
             let point = this.snakeBody[i];
             if(i == this.smallowed){
@@ -323,7 +323,7 @@ function Snake(respawn_point){
                 ctx.fillRect(point.realX,point.realY,map.cell_size,map.cell_size)
             }
         }
-        ctx.fillStyle = this.firstColor;
+        ctx.fillStyle = this.colors.firstColor;
         for(let point of this.snakeNeck){
             let size = map.cell_size;
             ctx.fillRect(point.x-(size/1.9),point.y-(size/1.9),size*1.1,size*1.1);
