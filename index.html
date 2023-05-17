@@ -12,13 +12,90 @@
             <!-- Scena gry -->
             
             <div id="game-window">
-                <span id="score-display">0</span>
+                
+                <div class="game-menu" id="game-top-bar" name="game-topbar">
+                    <span id="score-display">0</span>
+                    <button type="button" id="game-button-pause">Pause</button>
+                </div>
 
                 <canvas id="game-scene">
                     <p>Przykro mi. Twoja przeglądarka nie obsługuje niezbędnych komponentów do uruchumienia gry lub blokuje pliki JavaScript</p>
                 </canvas>
                 
-                 <!-- JOYSTICK for mobile devices -->
+                                <!-- Main menu -->
+                <div class="game-menu window-element-active" name="main-menu">
+                    <span class="menu-page-header">Vege Snake</span>
+                    <button type="button" class="game-menu-button" name="switch-menu-page" value="gamemode-menu">Nowa Gra</button>
+                    <button type="button" class="game-menu-button" name="switch-menu-page" value="steering-menu">Sterowanie</button>
+                    <button type="button" class="game-menu-button" name="switch-menu-page" value="aboutAuthor-menu">O twórcy</button>
+                    <button type="button" class="game-menu-button" id="game-button-exit">Wyjście</button>
+               </div>
+
+               <!--choice gamemode menu -->
+               <div class="game-menu" name="gamemode-menu">
+
+                    <span class="menu-page-header">Tryb Gry</span>
+                    <div class="game-menu-row">
+                        <div>
+                            <span>Bez ścian (ŁATWY)</span>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi facilis explicabo vitae, tempore architecto sint?</p>
+                            <button type="button" class="game-menu-button" name="choice-game-mode" value="nowalls" >Wybierz</button>
+                        </div>
+                        <div>
+                            <span>Sciany (TRUDNY)</span>
+                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi facilis explicabo vitae, tempore architecto sint?</p>
+                            <button type="button" class="game-menu-button" name="choice-game-mode" value="walls">Wybierz</button>
+                        </div>
+                    </div>
+
+                </div>
+
+                 <!--choice snake color menu -->
+                <div class="game-menu" name="snakecolor-menu">
+
+                    <span class="menu-page-header">Kolor węża</span>
+                    <div class="game-menu-row">
+                        <button type="button" class="game-menu-button" value="blue"  name="choice-snake-color">BLUE</button>
+                        <button type="button" class="game-menu-button" value="orange"  name="choice-snake-color">ORANGE</button>
+                        <button type="button" class="game-menu-button" value="pink"  name="choice-snake-color">PINK</button>
+                    </div>
+
+                </div>
+
+
+                <!--about steering menu -->
+                <div class="game-menu" name="steering-menu">
+
+                    <span class="menu-page-header">Sterowanie</span>
+                    <p>W grze możesz sterować na 4 różne sposoby</p>
+                    <button type="button" class="game-menu-button" name="switch-menu-page" value="main-menu">Powrót</button>
+                </div>
+
+                <!--about author menu -->
+                <div class="game-menu" name="aboutAuthor-menu">
+
+                    <span class="menu-page-header">O Twórcy</span>
+                    <p>Hej nazywam się Mateusz Rak i staram się nauczyć więcej niż jestem w stanie zrozumieć.. </p>
+                    <button type="button" class="game-menu-button" name="switch-menu-page" value="main-menu">Powrót</button>
+                </div>
+
+
+                <!-- When Dead Menu -->
+                <div class="game-menu" name="gameover-menu">
+
+                    <span class="menu-page-header">Umarłeś !</span>
+                    <div id="dead-score-display"></div>
+                    <button type="button" class="game-menu-button" name="switch-menu-page" value="main-menu">Wróc do menu</button>
+                </div>
+
+                <div class="game-menu" name="pause-menu">
+
+                    <span class="menu-page-header">Gra zatrzymana</span>
+                    <button type="button" class="game-menu-button" id="game-button-resume">Wznów gre</button>
+                    <button type="button" class="game-menu-button" name="switch-menu-page" value="main-menu">Wróc do menu</button>
+                </div>
+                
+                 <!-- JOYSTICK for toutch devices -->
                 <div id="joystick">
                     <div></div>
                 </div>
