@@ -1,11 +1,10 @@
 body{
     margin:0;
-    overscroll-behavior-y: contain;
 }
 #game-container{
     position: fixed;
-    width: 98%;
-    height: 98%;
+    width: 99%;
+    height: 99%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,6 +12,7 @@ body{
     background-color: black;
     font-family: monospace;
     color: #fff;
+    overscroll-behavior-y: contain;
 }
 button{
     font-family: monospace;
