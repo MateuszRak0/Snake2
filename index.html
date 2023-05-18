@@ -15,7 +15,11 @@
                 
                 <div class="game-menu" id="game-top-bar" name="game-topbar">
                     <span id="score-display">0</span>
-                    <button type="button" id="game-button-pause">Pause</button>
+                    <button type="button" id="game-button-pause">
+                        <span class="pause-button-element"></span>
+                        <span class="pause-button-element"></span>
+                    </button>
+                    <span id="counter-display">3</span>
                 </div>
 
                 <canvas id="game-scene">
@@ -34,15 +38,15 @@
                <!--choice gamemode menu -->
                <div class="game-menu" name="gamemode-menu">
 
-                    <span class="menu-page-header">GameMode</span>
+                    <span class="menu-page-header">Select GameMode</span>
                     <div class="game-menu-row">
-                        <div>
-                            <span>Easy</span>
+                        <div class="game-half-box">
+                            <span class="menu-small-title">Easy</span>
                             <p>You can pass thru the walls</p>
                             <button type="button" class="game-menu-button" name="choice-game-mode" value="nowalls" >Select</button>
                         </div>
-                        <div>
-                            <span>Hard</span>
+                        <div class="game-half-box">
+                            <span class="menu-small-title">Hard</span>
                             <p>You will die if you hit the wall</p>
                             <button type="button" class="game-menu-button" name="choice-game-mode" value="walls">Select</button>
                         </div>
@@ -53,11 +57,24 @@
                  <!--choice snake color menu -->
                 <div class="game-menu" name="snakecolor-menu">
 
-                    <span class="menu-page-header">Snake Color</span>
+                    <span class="menu-page-header">Select Snake</span>
                     <div class="game-menu-row">
-                        <button type="button" class="game-menu-button" value="blue"  name="choice-snake-color">BLUE</button>
-                        <button type="button" class="game-menu-button" value="orange"  name="choice-snake-color">ORANGE</button>
-                        <button type="button" class="game-menu-button" value="pink"  name="choice-snake-color">PINK</button>
+
+                        <div class="game-onthree-box">
+                            <img src="snake-blue.png" alt="preview of blue snake">
+                            <button type="button" class="game-menu-button" value="blue"  name="choice-snake-color">Sssteve</button>
+                        </div>
+
+                        <div class="game-onthree-box">
+                            <img src="snake-orange.png" alt="preview of orange snake">
+                            <button type="button" class="game-menu-button" value="orange"  name="choice-snake-color">Sssam</button>
+                        </div>
+
+                        <div class="game-onthree-box">
+                            <img src="snake-pink.png" alt="preview of pink snake">
+                            <button type="button" class="game-menu-button" value="pink"  name="choice-snake-color">Sssophia</button>
+                        </div>
+    
                     </div>
 
                 </div>
@@ -67,7 +84,21 @@
                 <div class="game-menu" name="steering-menu">
 
                     <span class="menu-page-header">Steering</span>
-                    <p>--</p>
+                    <div class="game-menu-row">
+                        <div class="game-onthree-box">
+                            <span class="menu-small-title">Method 1</span>
+                            <p>If you have keybord in your device you can easy steering by use: </p>
+                            <ul>
+                                <li>a,w,s,d</li>
+                                <li>&#x2190;,&#x2191;,&#x2192;,&#x2193;</li>
+                            </ul>
+                        </div>
+
+                        <div class="game-onthree-box">
+                            <span class="menu-small-title">Method 2</span>
+                            <p>If you have toutch screen device click anywhere on the map to show joystick</p>
+                        </div>
+                    </div>
                     <button type="button" class="game-menu-button" name="switch-menu-page" value="main-menu">Powrót</button>
                 </div>
 
@@ -89,10 +120,11 @@
                 </div>
 
                 <div class="game-menu" name="pause-menu">
-
-                    <span class="menu-page-header">Game paused</span>
-                    <button type="button" class="game-menu-button" id="game-button-resume">Resume game</button>
-                    <button type="button" class="game-menu-button" name="switch-menu-page" value="main-menu">Back to menu</button>
+                    <div class="game-half-box">
+                        <span class="menu-page-header">Game paused</span>
+                        <button type="button" class="game-menu-button" id="game-button-resume">Resume game</button>
+                        <button type="button" class="game-menu-button" name="switch-menu-page" value="main-menu">Back to menu</button>
+                    </div>
                 </div>
                 
                  <!-- JOYSTICK for toutch devices -->
