@@ -1,3 +1,7 @@
+body{
+    margin:0;
+    overscroll-behavior-y: contain;
+}
 #game-container{
     position: fixed;
     width: 98%;
