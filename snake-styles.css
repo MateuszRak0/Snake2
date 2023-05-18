@@ -1,5 +1,6 @@
 body{
     margin:0;
+    overscroll-behavior-y: contain;
 }
 #game-container{
     position: fixed;
@@ -12,7 +13,6 @@ body{
     background-color: black;
     font-family: monospace;
     color: #fff;
-    overscroll-behavior-y: contain;
 }
 button{
     font-family: monospace;
