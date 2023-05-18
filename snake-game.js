@@ -1,6 +1,7 @@
 const canvas = document.getElementById("game-scene");
 const scoreDisplay = document.getElementById("score-display");
 let joystick = new JoyStick(document.getElementById("game-window"));
+let counter = new Counter(3,1,-1,1000,document.getElementById("counter-display"),gameLoop);
 let ctx = canvas.getContext("2d");
 let map = countMapSurface();
 let playerRespawnPoint = map.map[`2:2`];
@@ -56,6 +57,7 @@ function switchMenuWindow(){ // Switch menu window by button value
 
 function setGameMode(){
     if(this.value == "nowalls"){
+        canvas.style.border = "none";
         Snake.prototype.checkBorders  = function(){
                 if(this.x < 0){ this.x = map.borders.right; } 
                 else if(this.x > map.borders.right){this.x = 0;}
@@ -64,6 +66,7 @@ function setGameMode(){
             }
     }
     else{
+        canvas.style.border = "2px solid red";
         Snake.prototype.checkBorders  = function(){
             if(this.x < 0 || this.x > map.borders.right){ this.dead()} 
             else if(this.y < 0 || this.y > map.borders.bottom){ this.dead()}
@@ -81,12 +84,14 @@ function setSnakeColor(){
 }
 
 function startGame(){
+    ctx.clearRect(0,0,canvas.clientWidth,canvas.height);
     player = new Snake(playerRespawnPoint);
     pointsmenager = new PointsMenager();
     joystick.callback = player.steering.bind(player);
     gamePaused = false;
     menuWindows["game-topbar"].classList.add("window-element-active");
-    gameLoop();
+    player.live();
+    counter.start();
 }
 
 function pauseGame(){
@@ -99,7 +104,7 @@ function resumeGame(){
     gamePaused = false;
     menuWindows["pause-menu"].classList.remove("window-element-active");
     menuWindows["game-topbar"].classList.add("window-element-active");
-    gameLoop();
+    counter.start();
 }
 
 // TYPICAL GAME FUNCTIONS BELOW !
@@ -130,10 +135,6 @@ function Map(width,height,cell_size){
         }
     }
 
-    this.renderBorders = function(){
-        ctx.strokeRect(0,0,this.borders.right+this.cell_size,this.borders.bottom+this.cell_size)
-    }
-
     this.get_cell = function(real_x,real_y){
         let x = Math.floor(real_x/cell_size);
         let y = Math.floor(real_y/cell_size);
@@ -156,7 +157,7 @@ Snake.prototype.dead = function(){
     gamePaused = true;
     menuWindows["gameover-menu"].classList.add("window-element-active");
     menuWindows["game-topbar"].classList.remove("window-element-active");
-    document.getElementById("dead-score-display").innerHTML = `Twój wynik: ${pointsmenager.points}`;
+    document.getElementById("dead-score-display").innerHTML = `Your score: ${pointsmenager.points}`;
 }
 
 function Snake(respawn_point){
@@ -227,26 +228,26 @@ function Snake(respawn_point){
         switch(keyboard.key){
             case "ArrowUp":
             case "w":
-                player.next_move.vertical = true;
-                player.next_move.direction = -1;
+                this.next_move.vertical = true;
+                this.next_move.direction = -1;
                 break
     
             case "ArrowDown":
             case "s":
-                player.next_move.vertical = true;
-                player.next_move.direction = 1;
+                this.next_move.vertical = true;
+                this.next_move.direction = 1;
                 break
     
             case "ArrowLeft":
             case "a":
-                player.next_move.vertical = false;
-                player.next_move.direction = -1;
+                this.next_move.vertical = false;
+                this.next_move.direction = -1;
                 break
 
             case "ArrowRight":
             case "d":
-                player.next_move.vertical = false;
-                player.next_move.direction = 1;
+                this.next_move.vertical = false;
+                this.next_move.direction = 1;
                 break
         }
     };
@@ -332,7 +333,7 @@ function Snake(respawn_point){
         }
     };
 
-    window.addEventListener("keydown",this.steering)
+    window.addEventListener("keydown",this.steering.bind(this))
 }
 
 
@@ -399,7 +400,7 @@ function PointsMenager(){
     }
 
     this.createTimePoint = function(){
-        this.special = this.createPoint("point_special.png",.004,2,15);
+        this.special = this.createPoint("point_special.png",.004,3,15);
         this.specialColdown = 20; // counting like that becouse snake can speed up and reach spec points faster :)
     }
 
@@ -414,7 +415,8 @@ function PointsMenager(){
         if(!this.special || this.specialColdown < 0) this.createTimePoint(); 
         this.renderPoints();
     }
-
+    
+    this.updateDisplay();
 }
 
 
@@ -459,6 +461,10 @@ function JoyStick(window){
     this.pivot = this.popup.querySelector("div");
     this.pivot.style.left = "30px";
     this.pivot.style.top = "30px";
+    
+    this.callback = function(){ // deflaut callback to block console errors
+        return false
+    }
 
     this.returnToutchPos = function(event){
         var rect = event.target.getBoundingClientRect();
@@ -537,13 +543,59 @@ function JoyStick(window){
     this.endTotuch = function(){
         this.popup.style.visibility = "hidden";
     }
-
-    this.movePivot = function(x,y){
-
-    }
-
-
+    
     this.gameWindow.addEventListener("touchstart",this.firstToutch.bind(this))
     this.gameWindow.addEventListener("touchmove",this.toutch.bind(this))
     this.gameWindow.addEventListener("touchend",this.endTotuch.bind(this))
+}
+
+function Counter(from,to,step,timeBetwenSteps,display,callback){
+    this.startValue = from;
+    this.value = from;
+    this.endValue = to;
+    this.step = step;
+    this.timeBetwenSteps = timeBetwenSteps;
+    this.display = display;
+    this.callback = callback;
+
+    if(from>to){
+        this.check = function(){
+            if(this.value <= this.endValue){
+                this.value = this.endValue;
+                this.display.classList.remove("window-element-active")
+                return true
+            }
+        }
+    } 
+    else{
+        this.check = function(){
+            if(this.value >= this.endValue){
+                this.value = this.endValue;
+                this.display.classList.remove("window-element-active")
+                return true
+            }
+        }
+    }
+
+    this.count = function(){
+        if(!this.check()){
+            this.value += this.step;
+            this.updateDisplay();
+            setTimeout(()=>{this.count()},this.timeBetwenSteps)
+        } else if(this.callback){
+            this.callback();
+        }
+    }
+
+    this.start = function(){
+        this.value = this.startValue;
+        this.updateDisplay();
+        this.display.classList.add("window-element-active")
+        setTimeout(()=>{this.count()},this.timeBetwenSteps)
+    }
+
+    this.updateDisplay = function(){
+        this.display.innerHTML = this.value;
+    }
+    this.updateDisplay();
 }
