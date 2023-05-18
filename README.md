@@ -20,10 +20,10 @@ additionally, in the code we can find the Joystick object that allows us to cont
 ## Map
 The map is a grid of 16x16px squares. It is generated with the size given by countMapSurface functions
 
-##Snake
+## Snake
 The snake references the map, checking its position after each move, if it has just entered a new square on the map, it adds the previous one to the array called snakeBody. if snakeBody is longer than the current possible length, the last element in array is removed
 
-##PointsMenager
+## PointsMenager
 It is responsible for throwing apples (points) on the map, additionally it counts the points collected by the player and displays them on the screen
 
 ![](https://images2.imgbox.com/c8/d1/HWjlQ0O1_o.png)
