@@ -1,4 +1,4 @@
-### Features
+# Features
 
 - Popular snake game in pure js/html/css no frameworks used.
 - compatible with mobile and desktop devices. 
